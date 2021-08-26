@@ -1,0 +1,7 @@
+spring:
+  profiles:
+    active: ${SCOPE}
+
+server:
+  servlet:
+    context-path: /inventory_api_core/api/v1/
