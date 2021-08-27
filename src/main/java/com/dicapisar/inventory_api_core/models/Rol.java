@@ -7,16 +7,16 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "prueba_table")
+@Table(name = "roles")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Test {
+public class Rol {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "prueba_id")
+    @Column(name = "rol_id")
     private Long id;
 
-    @Column(name = "prueba_name", nullable = false)
+    @Column(name = "rol_name", nullable = false)
     private String name;
 }
