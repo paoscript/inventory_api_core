@@ -37,4 +37,10 @@ public class BrandController {
             throws BrandNotFoundException {
         return new ResponseEntity<>(brandService.updateBrandById(id, brandRequestDTO, 1L), HttpStatus.OK);
     }
+
+    @PutMapping("deactivate/{id}")
+    public ResponseEntity<?> deactivateBrandById(@PathVariable Long id) throws BrandNotFoundException {
+        brandService.deactivateBrandById(id, 1L);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

@@ -37,7 +37,7 @@ public class BrandService implements IBrandService{
     }
 
     public BrandResponseDTO getBrandResponseDTO(Long idBrand) throws BrandNotFoundException {
-        Brand brand = brandRepository.findBrandById(idBrand);
+        Brand brand = brandRepository.findBrandByIdAndActive(idBrand, true);
         if(brand == null) {
             throw new BrandNotFoundException(idBrand);
         }
@@ -45,12 +45,22 @@ public class BrandService implements IBrandService{
     }
 
     public BrandResponseDTO updateBrandById(Long idBrand, BrandRequestDTO brandRequestDTO, Long idUser) throws BrandNotFoundException {
-        Brand brand = brandRepository.findBrandById(idBrand);
+        Brand brand = brandRepository.findBrandByIdAndActive(idBrand, true);
         if(brand == null) {
             throw new BrandNotFoundException(idBrand);
         }
 
         return BrandUtil.toBrandResponseDTO(updateBrand(brand, brandRequestDTO, idUser));
+
+    }
+
+    public void deactivateBrandById(Long idBrand, Long idUser) throws BrandNotFoundException {
+        Brand brand = brandRepository.findBrandByIdAndActive(idBrand, true);
+        if(brand == null) {
+            throw new BrandNotFoundException(idBrand);
+        }
+
+        deactivateBrand(brand, idUser);
 
     }
 
@@ -78,6 +88,20 @@ public class BrandService implements IBrandService{
         brandRepository.save(brandUpdated);
 
         return brandUpdated;
+    }
+
+    private void deactivateBrand(Brand brand, Long idUser) {
+
+        User user = userRepository.findUserById(idUser);
+
+        Brand brandUpdated = brand;
+
+        brandUpdated.setActive(false);
+        brandUpdated.setUpdater(user);
+        brandUpdated.setUpdatedAt(LocalDateTime.now());
+
+        brandRepository.save(brandUpdated);
+
     }
 
 }

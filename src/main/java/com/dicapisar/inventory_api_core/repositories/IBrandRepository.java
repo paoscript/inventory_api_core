@@ -21,5 +21,5 @@ public interface IBrandRepository extends JpaRepository<Brand, Long> {
     @Query(value = "insert into brands (bra_name, bra_active, bra_created_at, bra_updated_at, bra_created_by_id, bra_updated_by_id) values (:name, true, current_timestamp, current_timestamp, :idUser, :idUser)", nativeQuery = true)
     void insertBrand(@Param("name") String name, @Param("idUser") Long idUser);
 
-    Brand findBrandById(long id);
+    Brand findBrandByIdAndActive(long id, Boolean active);
 }
