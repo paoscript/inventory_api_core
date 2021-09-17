@@ -2,6 +2,7 @@ package com.dicapisar.inventory_api_core.services;
 
 import com.dicapisar.inventory_api_core.Exeptions.BrandAlredyExistsException;
 import com.dicapisar.inventory_api_core.Exeptions.BrandNotFoundException;
+import com.dicapisar.inventory_api_core.Exeptions.ListNotFoundException;
 import com.dicapisar.inventory_api_core.dtos.requests.BrandRequestDTO;
 import com.dicapisar.inventory_api_core.dtos.resposes.BrandResponseDTO;
 import com.dicapisar.inventory_api_core.models.Brand;
@@ -13,6 +14,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -21,6 +23,22 @@ public class BrandService implements IBrandService{
 
     private IBrandRepository brandRepository;
     private IUserRepository userRepository;
+
+    public List<BrandResponseDTO> getListBrand(boolean isActive) throws ListNotFoundException {
+        List<Brand> brandList = brandRepository.getListBrand(isActive);
+
+        if (brandList.isEmpty()) {
+            throw new ListNotFoundException("Brand");
+        }
+
+        List<BrandResponseDTO> brandResponseDTOList = new ArrayList<>();
+
+        for (Brand brand : brandList) {
+            brandResponseDTOList.add(BrandUtil.toBrandResponseDTO(brand));
+        }
+
+        return brandResponseDTOList;
+    }
 
     public void createNewBrand(BrandRequestDTO brandCreateRequestDTO, Long idUser) throws BrandAlredyExistsException {
 

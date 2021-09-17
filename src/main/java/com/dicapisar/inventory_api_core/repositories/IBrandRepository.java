@@ -13,6 +13,9 @@ import java.util.List;
 @Repository
 public interface IBrandRepository extends JpaRepository<Brand, Long> {
 
+    @Query("select b from Brand b where b.active =:isActive")
+    List<Brand> getListBrand(@Param("isActive") Boolean isActive);
+
     @Query("select b from Brand b where b.name =:name")
     List<Brand> getBrandsByName(@Param("name") String name);
 
