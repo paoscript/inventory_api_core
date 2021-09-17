@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TypeRecordsDTO {
+public class TypeRecordsResponseDTO {
     private String englishName;
     private String spanishName;
     private String url;

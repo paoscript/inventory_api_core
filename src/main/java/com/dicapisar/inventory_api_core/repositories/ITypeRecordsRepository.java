@@ -9,6 +9,8 @@ import java.util.List;
 
 @Repository
 public interface ITypeRecordsRepository extends JpaRepository<TypeRecords, Long> {
+
     @Query("select t from TypeRecords t where t.active=true")
     List<TypeRecords> getListTypeRecords();
+
 }
