@@ -1,9 +1,12 @@
 package com.dicapisar.inventory_api_core.services;
 
 import com.dicapisar.inventory_api_core.Exeptions.BrandAlredyExistsException;
+import com.dicapisar.inventory_api_core.Exeptions.BrandNotFoundException;
 import com.dicapisar.inventory_api_core.dtos.requests.BrandCreateRequestDTO;
+import com.dicapisar.inventory_api_core.dtos.resposes.BrandResponseDTO;
 import com.dicapisar.inventory_api_core.models.Brand;
 import com.dicapisar.inventory_api_core.repositories.IBrandRepository;
+import com.dicapisar.inventory_api_core.utils.Brandutil;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +30,14 @@ public class BrandService implements IBrandService{
             brandRepository.insertBrand(brandCreateRequestDTO.getName(), idUser);
         }
 
+    }
+
+    public BrandResponseDTO getBrandResponseDTO(Long idBrand) throws BrandNotFoundException {
+        Brand brand = brandRepository.findBrandById(idBrand);
+        if(brand == null) {
+            throw new BrandNotFoundException(idBrand);
+        }
+        return Brandutil.toBrandResonseDTO(brand);
     }
 
     private boolean isRegistrationAlreadyExists(List<Brand> brandList, String name) {
