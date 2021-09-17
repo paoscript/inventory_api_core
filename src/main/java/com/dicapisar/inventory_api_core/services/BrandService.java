@@ -72,13 +72,13 @@ public class BrandService implements IBrandService{
 
     }
 
-    public void deactivateBrandById(Long idBrand, Long idUser) throws BrandNotFoundException {
-        Brand brand = brandRepository.findBrandByIdAndActive(idBrand, true);
+    public void changeStatusActiveById(Long idBrand, Long idUser, Boolean status) throws BrandNotFoundException {
+        Brand brand = brandRepository.findBrandByIdAndActive(idBrand, !status);
         if(brand == null) {
             throw new BrandNotFoundException(idBrand);
         }
 
-        deactivateBrand(brand, idUser);
+        changeStatusActivate(brand, idUser, status);
 
     }
 
@@ -108,13 +108,13 @@ public class BrandService implements IBrandService{
         return brandUpdated;
     }
 
-    private void deactivateBrand(Brand brand, Long idUser) {
+    private void changeStatusActivate(Brand brand, Long idUser, Boolean status) {
 
         User user = userRepository.findUserById(idUser);
 
         Brand brandUpdated = brand;
 
-        brandUpdated.setActive(false);
+        brandUpdated.setActive(status);
         brandUpdated.setUpdater(user);
         brandUpdated.setUpdatedAt(LocalDateTime.now());
 
