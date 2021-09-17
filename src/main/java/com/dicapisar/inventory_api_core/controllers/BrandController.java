@@ -2,7 +2,7 @@ package com.dicapisar.inventory_api_core.controllers;
 
 import com.dicapisar.inventory_api_core.Exeptions.BrandAlredyExistsException;
 import com.dicapisar.inventory_api_core.Exeptions.BrandNotFoundException;
-import com.dicapisar.inventory_api_core.dtos.requests.BrandCreateRequestDTO;
+import com.dicapisar.inventory_api_core.dtos.requests.BrandRequestDTO;
 import com.dicapisar.inventory_api_core.dtos.resposes.BrandResponseDTO;
 import com.dicapisar.inventory_api_core.services.IBrandService;
 import lombok.AllArgsConstructor;
@@ -20,9 +20,9 @@ public class BrandController {
     private IBrandService brandService;
 
     @PostMapping("/create")
-    public ResponseEntity<?> createNewBrand(@RequestBody @Valid BrandCreateRequestDTO brandCreateRequestDTO)
+    public ResponseEntity<?> createNewBrand(@RequestBody @Valid BrandRequestDTO brandRequestDTO)
             throws BrandAlredyExistsException {
-        brandService.createNewBrand(brandCreateRequestDTO, 1L);
+        brandService.createNewBrand(brandRequestDTO, 1L);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -30,5 +30,11 @@ public class BrandController {
     public ResponseEntity<BrandResponseDTO> getBrandById(@PathVariable Long id)
             throws BrandNotFoundException {
         return new ResponseEntity<>(brandService.getBrandResponseDTO(id), HttpStatus.OK);
+    }
+
+    @PostMapping("/{id}")
+    public ResponseEntity<BrandResponseDTO> updateBrandById(@PathVariable Long id, @RequestBody BrandRequestDTO brandRequestDTO)
+            throws BrandNotFoundException {
+        return new ResponseEntity<>(brandService.updateBrandById(id, brandRequestDTO, 1L), HttpStatus.OK);
     }
 }

@@ -9,7 +9,7 @@ import javax.validation.constraints.NotEmpty;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BrandCreateRequestDTO {
+public class BrandRequestDTO {
     @NotEmpty(message = "The name must not be empty.")
     private String name;
 }
