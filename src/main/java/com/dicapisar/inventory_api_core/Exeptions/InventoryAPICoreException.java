@@ -12,7 +12,7 @@ public class InventoryAPICoreException extends Exception{
     public InventoryAPICoreException(String message, HttpStatus status) {
         this.error = new ErrorDTO();
         this.error.setMessage(message);
-        this.error.setName(this.getClass().getSimpleName());
+        this.error.setErrorName(this.getClass().getSimpleName());
         this.status = status;
     }
 

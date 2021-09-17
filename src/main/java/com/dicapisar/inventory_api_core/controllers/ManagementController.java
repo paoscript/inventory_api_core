@@ -1,6 +1,6 @@
 package com.dicapisar.inventory_api_core.controllers;
 
-import com.dicapisar.inventory_api_core.dtos.resposes.TypeRecordsDTO;
+import com.dicapisar.inventory_api_core.dtos.resposes.TypeRecordsResponseDTO;
 import com.dicapisar.inventory_api_core.services.IManagementService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,7 +19,7 @@ public class ManagementController {
     private IManagementService managementService;
 
     @GetMapping("/list")
-    public ResponseEntity< List<TypeRecordsDTO>> getListTypeRecords() {
+    public ResponseEntity< List<TypeRecordsResponseDTO>> getListTypeRecords() {
         return new ResponseEntity<>(managementService.getListTypeRecordsDTO(), HttpStatus.OK);
     }
 

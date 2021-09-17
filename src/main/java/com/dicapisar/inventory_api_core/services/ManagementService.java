@@ -1,6 +1,6 @@
 package com.dicapisar.inventory_api_core.services;
 
-import com.dicapisar.inventory_api_core.dtos.resposes.TypeRecordsDTO;
+import com.dicapisar.inventory_api_core.dtos.resposes.TypeRecordsResponseDTO;
 import com.dicapisar.inventory_api_core.repositories.ITypeRecordsRepository;
 import com.dicapisar.inventory_api_core.utils.TypeRecordsUtil;
 import lombok.AllArgsConstructor;
@@ -14,7 +14,7 @@ public class ManagementService implements IManagementService{
 
     private ITypeRecordsRepository typeRecordsRepository;
 
-    public List<TypeRecordsDTO> getListTypeRecordsDTO() {
+    public List<TypeRecordsResponseDTO> getListTypeRecordsDTO() {
         return TypeRecordsUtil.toListTypeRecordsDTO(typeRecordsRepository.getListTypeRecords());
     }
 }
