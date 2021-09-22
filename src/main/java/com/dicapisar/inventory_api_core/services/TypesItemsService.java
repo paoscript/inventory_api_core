@@ -6,11 +6,14 @@ import com.dicapisar.inventory_api_core.Exeptions.RegisterNotFoundException;
 import com.dicapisar.inventory_api_core.dtos.requests.TypeItemRequestDTO;
 import com.dicapisar.inventory_api_core.dtos.resposes.TypesItemsResponseDTO;
 import com.dicapisar.inventory_api_core.models.TypeItems;
+import com.dicapisar.inventory_api_core.models.User;
 import com.dicapisar.inventory_api_core.repositories.ITypesItemsRepository;
+import com.dicapisar.inventory_api_core.repositories.IUserRepository;
 import com.dicapisar.inventory_api_core.utils.TypeItemsUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +22,7 @@ import java.util.List;
 public class TypesItemsService implements ITypesItemsService {
 
     private ITypesItemsRepository typesItemsRepository;
+    private IUserRepository userRepository;
 
     public List<TypesItemsResponseDTO> getListTypesItems(boolean isActive) throws ListNotFoundException {
         List<TypeItems> typeItemsList = typesItemsRepository.getListTypesItems(isActive);
@@ -56,6 +60,15 @@ public class TypesItemsService implements ITypesItemsService {
         return TypeItemsUtil.toTypesItemsResponseDTO(typeItems);
     }
 
+    public TypesItemsResponseDTO updateTypeItemById(Long idTypeItem, TypeItemRequestDTO typeItemRequestDTO, Long idUser) throws RegisterNotFoundException {
+       TypeItems typeItems = typesItemsRepository.findTypeItemsByIdAndActive(idTypeItem, true);
+       if(typeItems == null) {
+           throw new RegisterNotFoundException("Type Item", idTypeItem);
+       }
+
+       return TypeItemsUtil.toTypesItemsResponseDTO(updateTypeItem(typeItems, typeItemRequestDTO, idUser));
+    }
+
     private boolean isRegistrationAlreadyExists(List<TypeItems> typeItemsList, String name) {
         for (TypeItems typeItems: typeItemsList) {
             if (typeItems.getName().equals(name)) {
@@ -63,5 +76,26 @@ public class TypesItemsService implements ITypesItemsService {
             }
         }
         return false;
+    }
+
+    private TypeItems updateTypeItem(TypeItems typeItems, TypeItemRequestDTO typeItemRequestDTO, Long idUser) {
+
+        User user = userRepository.findUserById(idUser);
+
+        TypeItems typeItemsUpdated = typeItems;
+
+        if(!typeItemsUpdated.getName().equals(typeItemRequestDTO.getName())) {
+
+            if (!typeItemsUpdated.isPerishable() == typeItemRequestDTO.isPerishable()) {
+                typeItemsUpdated.setPerishable(typeItemRequestDTO.isPerishable());
+            }
+
+            typeItemsUpdated.setName(typeItemRequestDTO.getName());
+            typeItemsUpdated.setUpdater(user);
+            typeItemsUpdated.setUpdatedAt(LocalDateTime.now());
+
+        }
+
+        return typesItemsRepository.save(typeItemsUpdated);
     }
 }

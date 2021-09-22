@@ -36,4 +36,9 @@ public class TypesItemsController {
     public ResponseEntity<TypesItemsResponseDTO> getTypeItemById(@PathVariable Long id) throws RegisterNotFoundException {
         return new ResponseEntity<>(typesItemsService.getTypeItemRequestDTO(id), HttpStatus.OK);
     }
+
+    @PostMapping("/{id}")
+    public ResponseEntity<TypesItemsResponseDTO> updateTypeItemById(@PathVariable long id, @RequestBody @Valid TypeItemRequestDTO typeItemRequestDTO) throws RegisterNotFoundException {
+        return new ResponseEntity<>(typesItemsService.updateTypeItemById(id, typeItemRequestDTO, 1L), HttpStatus.OK);
+    }
 }

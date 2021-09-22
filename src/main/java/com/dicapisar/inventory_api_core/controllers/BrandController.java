@@ -40,7 +40,7 @@ public class BrandController {
     }
 
     @PostMapping("/{id}")
-    public ResponseEntity<BrandResponseDTO> updateBrandById(@PathVariable Long id, @RequestBody BrandRequestDTO brandRequestDTO)
+    public ResponseEntity<BrandResponseDTO> updateBrandById(@PathVariable Long id, @RequestBody @Valid BrandRequestDTO brandRequestDTO)
             throws RegisterNotFoundException {
         return new ResponseEntity<>(brandService.updateBrandById(id, brandRequestDTO, 1L), HttpStatus.OK);
     }
