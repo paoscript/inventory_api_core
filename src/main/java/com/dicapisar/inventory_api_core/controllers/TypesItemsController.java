@@ -2,6 +2,7 @@ package com.dicapisar.inventory_api_core.controllers;
 
 import com.dicapisar.inventory_api_core.Exeptions.ExistingRegistrationException;
 import com.dicapisar.inventory_api_core.Exeptions.ListNotFoundException;
+import com.dicapisar.inventory_api_core.Exeptions.RegisterNotFoundException;
 import com.dicapisar.inventory_api_core.dtos.requests.TypeItemRequestDTO;
 import com.dicapisar.inventory_api_core.dtos.resposes.TypesItemsResponseDTO;
 import com.dicapisar.inventory_api_core.services.ITypesItemsService;
@@ -29,5 +30,10 @@ public class TypesItemsController {
     public ResponseEntity<?> createNewTypeItem(@RequestBody @Valid TypeItemRequestDTO typeItemRequestDTO) throws ExistingRegistrationException {
         typesItemsService.createNewTypeItem(typeItemRequestDTO, 1L);
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<TypesItemsResponseDTO> getTypeItemById(@PathVariable Long id) throws RegisterNotFoundException {
+        return new ResponseEntity<>(typesItemsService.getTypeItemRequestDTO(id), HttpStatus.OK);
     }
 }

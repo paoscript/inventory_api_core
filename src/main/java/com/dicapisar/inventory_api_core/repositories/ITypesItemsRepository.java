@@ -19,10 +19,7 @@ public interface ITypesItemsRepository extends JpaRepository<TypeItems, Long> {
     @Query("select t from TypeItems t where t.name =:name")
     List<TypeItems> getItemTypeByName(@Param("name") String name);
 
-    /**
-     *
-     Brand findBrandByIdAndActive(long id, Boolean active);
-     */
+    TypeItems findTypeItemsByIdAndActive(long id, Boolean active);
 
     @Transactional
     @Modifying

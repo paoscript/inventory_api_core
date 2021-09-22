@@ -2,6 +2,7 @@ package com.dicapisar.inventory_api_core.services;
 
 import com.dicapisar.inventory_api_core.Exeptions.ExistingRegistrationException;
 import com.dicapisar.inventory_api_core.Exeptions.ListNotFoundException;
+import com.dicapisar.inventory_api_core.Exeptions.RegisterNotFoundException;
 import com.dicapisar.inventory_api_core.dtos.requests.TypeItemRequestDTO;
 import com.dicapisar.inventory_api_core.dtos.resposes.TypesItemsResponseDTO;
 import com.dicapisar.inventory_api_core.models.TypeItems;
@@ -45,6 +46,14 @@ public class TypesItemsService implements ITypesItemsService {
         } else {
             typesItemsRepository.insertTypeItem(typeItemRequestDTO.getName(), idUser, typeItemRequestDTO.isPerishable());
         }
+    }
+
+    public TypesItemsResponseDTO getTypeItemRequestDTO(Long idTypeItem) throws RegisterNotFoundException {
+        TypeItems typeItems = typesItemsRepository.findTypeItemsByIdAndActive(idTypeItem, true);
+        if (typeItems == null) {
+            throw new RegisterNotFoundException("Type Item", idTypeItem);
+        }
+        return TypeItemsUtil.toTypesItemsResponseDTO(typeItems);
     }
 
     private boolean isRegistrationAlreadyExists(List<TypeItems> typeItemsList, String name) {
