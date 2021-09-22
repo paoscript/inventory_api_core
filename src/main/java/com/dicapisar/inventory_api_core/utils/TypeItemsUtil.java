@@ -10,6 +10,7 @@ public class TypeItemsUtil {
 
         typesItemsResponseDTO.setId(typeItems.getId());
         typesItemsResponseDTO.setName(typeItems.getName());
+        typesItemsResponseDTO.setPerishable(typeItems.isPerishable());
 
         return typesItemsResponseDTO;
     }

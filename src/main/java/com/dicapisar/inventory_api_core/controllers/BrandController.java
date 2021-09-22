@@ -1,6 +1,6 @@
 package com.dicapisar.inventory_api_core.controllers;
 
-import com.dicapisar.inventory_api_core.Exeptions.BrandAlredyExistsException;
+import com.dicapisar.inventory_api_core.Exeptions.ExistingRegistrationException;
 import com.dicapisar.inventory_api_core.Exeptions.BrandNotFoundException;
 import com.dicapisar.inventory_api_core.Exeptions.ListNotFoundException;
 import com.dicapisar.inventory_api_core.dtos.requests.BrandRequestDTO;
@@ -28,9 +28,9 @@ public class BrandController {
 
     @PostMapping("/create")
     public ResponseEntity<?> createNewBrand(@RequestBody @Valid BrandRequestDTO brandRequestDTO)
-            throws BrandAlredyExistsException {
+            throws ExistingRegistrationException {
         brandService.createNewBrand(brandRequestDTO, 1L);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")

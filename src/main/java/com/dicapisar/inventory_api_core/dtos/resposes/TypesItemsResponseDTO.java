@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class TypesItemsResponseDTO {
     private Long id;
     private String name;
+    private boolean perishable;
 }

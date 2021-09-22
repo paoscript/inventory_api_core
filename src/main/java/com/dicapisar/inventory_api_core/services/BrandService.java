@@ -1,6 +1,6 @@
 package com.dicapisar.inventory_api_core.services;
 
-import com.dicapisar.inventory_api_core.Exeptions.BrandAlredyExistsException;
+import com.dicapisar.inventory_api_core.Exeptions.ExistingRegistrationException;
 import com.dicapisar.inventory_api_core.Exeptions.BrandNotFoundException;
 import com.dicapisar.inventory_api_core.Exeptions.ListNotFoundException;
 import com.dicapisar.inventory_api_core.dtos.requests.BrandRequestDTO;
@@ -40,13 +40,13 @@ public class BrandService implements IBrandService{
         return brandResponseDTOList;
     }
 
-    public void createNewBrand(BrandRequestDTO brandCreateRequestDTO, Long idUser) throws BrandAlredyExistsException {
+    public void createNewBrand(BrandRequestDTO brandCreateRequestDTO, Long idUser) throws ExistingRegistrationException {
 
         List<Brand> brandList = brandRepository.getBrandsByName(brandCreateRequestDTO.getName());
 
         if (!brandList.isEmpty()) {
             if (isRegistrationAlreadyExists(brandList, brandCreateRequestDTO.getName())) {
-                throw new BrandAlredyExistsException(brandCreateRequestDTO.getName());
+                throw new ExistingRegistrationException( "Brand" , brandCreateRequestDTO.getName());
             }
         } else {
             brandRepository.insertBrand(brandCreateRequestDTO.getName(), idUser);
