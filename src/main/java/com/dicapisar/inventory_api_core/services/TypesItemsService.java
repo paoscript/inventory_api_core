@@ -95,15 +95,15 @@ public class TypesItemsService implements ITypesItemsService {
         TypeItems typeItemsUpdated = typeItems;
 
         if(!typeItemsUpdated.getName().equals(typeItemRequestDTO.getName())) {
-
-            if (!typeItemsUpdated.isPerishable() == typeItemRequestDTO.isPerishable()) {
-                typeItemsUpdated.setPerishable(typeItemRequestDTO.isPerishable());
-            }
-
             typeItemsUpdated.setName(typeItemRequestDTO.getName());
             typeItemsUpdated.setUpdater(user);
             typeItemsUpdated.setUpdatedAt(LocalDateTime.now());
+        }
 
+        if (!typeItemsUpdated.isPerishable() == typeItemRequestDTO.isPerishable()) {
+            typeItemsUpdated.setPerishable(typeItemRequestDTO.isPerishable());
+            typeItemsUpdated.setUpdater(user);
+            typeItemsUpdated.setUpdatedAt(LocalDateTime.now());
         }
 
         return typesItemsRepository.save(typeItemsUpdated);
