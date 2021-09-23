@@ -83,6 +83,15 @@ public class ContactService implements IContactService {
     }
 
     @Transactional
+    public ContactResponseDTO getContactResponseDTO(Long idContact) throws RegisterNotFoundException {
+        Contact contact = contactRepository.findContactByIdAndActive(idContact, true);
+        if (contact == null) {
+            throw new RegisterNotFoundException("Contact", idContact);
+        }
+        return ContactUtil.toContactResponseDTO(contact);
+    }
+
+    @Transactional
     public ContactResponseDTO updateContactById(Long idContact, ContactRequestDTO contactRequestDTO, Long idUser) throws RegisterNotFoundException {
         Contact contact = contactRepository.findContactByIdAndActive(idContact, true);
         if (contact == null) {

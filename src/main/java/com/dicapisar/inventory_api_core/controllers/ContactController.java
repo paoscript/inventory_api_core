@@ -43,6 +43,11 @@ public class ContactController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ContactResponseDTO> getContactById(@PathVariable Long id) throws RegisterNotFoundException {
+        return new ResponseEntity<>(contactService.getContactResponseDTO(id), HttpStatus.OK);
+    }
+
     @PostMapping("/{id}")
     public ResponseEntity<ContactResponseDTO> updateContactById(@PathVariable Long id, @RequestBody @Valid ContactRequestDTO contactRequestDTO) throws RegisterNotFoundException {
         return new ResponseEntity<>(contactService.updateContactById(id, contactRequestDTO, 1L), HttpStatus.OK);
