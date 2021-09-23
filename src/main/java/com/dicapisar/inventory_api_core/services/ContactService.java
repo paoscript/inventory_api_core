@@ -1,11 +1,14 @@
 package com.dicapisar.inventory_api_core.services;
 
+import com.dicapisar.inventory_api_core.dtos.SimpleContactDTO;
 import com.dicapisar.inventory_api_core.dtos.requests.ContactRequestDTO;
 import com.dicapisar.inventory_api_core.dtos.resposes.ContactResponseDTO;
 import com.dicapisar.inventory_api_core.dtos.resposes.ListContactResponseDTO;
 import com.dicapisar.inventory_api_core.exceptions.ExistingRegistrationException;
 import com.dicapisar.inventory_api_core.exceptions.ListNotFoundException;
+import com.dicapisar.inventory_api_core.exceptions.RegisterNotFoundException;
 import com.dicapisar.inventory_api_core.models.Contact;
+import com.dicapisar.inventory_api_core.models.User;
 import com.dicapisar.inventory_api_core.repositories.IContactRepository;
 import com.dicapisar.inventory_api_core.repositories.IUserRepository;
 import com.dicapisar.inventory_api_core.utils.ContactUtil;
@@ -13,6 +16,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,6 +82,15 @@ public class ContactService implements IContactService {
 
     }
 
+    @Transactional
+    public ContactResponseDTO updateContactById(Long idContact, ContactRequestDTO contactRequestDTO, Long idUser) throws RegisterNotFoundException {
+        Contact contact = contactRepository.findContactByIdAndActive(idContact, true);
+        if (contact == null) {
+            throw new RegisterNotFoundException("Contact", idContact);
+        }
+        return ContactUtil.toContactResponseDTO(updateContact(contact, contactRequestDTO, idUser));
+    }
+
     private boolean isRegistrationAlreadyExists(List<Contact> contactList, String name) {
         for (Contact contact : contactList) {
             if (contact.getName().equals(name)) {
@@ -85,5 +98,52 @@ public class ContactService implements IContactService {
             }
         }
         return false;
+    }
+
+    private Contact updateContact(Contact contact, ContactRequestDTO contactRequestDTO, Long idUser) {
+        User user = userRepository.findUserById(idUser);
+
+        Contact contactUpdated = contact;
+
+        if (!contactUpdated.getName().equals(contactRequestDTO.getName())){
+            contactUpdated.setName(contactRequestDTO.getName());
+            contactUpdated.setUpdater(user);
+            contactUpdated.setUpdatedAt(LocalDateTime.now());
+        }
+
+        if (contactUpdated.getPhoneNumber() == null && contactRequestDTO.getPhoneNumber() != null) {
+            contactUpdated.setPhoneNumber(contactRequestDTO.getPhoneNumber());
+            contactUpdated.setUpdater(user);
+            contactUpdated.setUpdatedAt(LocalDateTime.now());
+        } else if (contactUpdated.getPhoneNumber() != null && contactRequestDTO.getPhoneNumber() == null) {
+            contactUpdated.setPhoneNumber(null);
+            contactUpdated.setUpdater(user);
+            contactUpdated.setUpdatedAt(LocalDateTime.now());
+        } else if (contactUpdated.getPhoneNumber() == null && contactRequestDTO.getPhoneNumber() == null) {
+
+        } else if (!contactUpdated.getPhoneNumber().equals(contactRequestDTO.getPhoneNumber())) {
+            contactUpdated.setPhoneNumber(contactRequestDTO.getPhoneNumber());
+            contactUpdated.setUpdater(user);
+            contactUpdated.setUpdatedAt(LocalDateTime.now());
+        }
+
+        if (contactUpdated.getEmail() == null && contactRequestDTO.getEmail() != null) {
+            contactUpdated.setEmail(contactRequestDTO.getEmail());
+            contactUpdated.setUpdater(user);
+            contactUpdated.setUpdatedAt(LocalDateTime.now());
+        } else if (contactUpdated.getEmail() != null && contactRequestDTO.getEmail() == null) {
+            contactUpdated.setEmail(null);
+            contactUpdated.setUpdater(user);
+            contactUpdated.setUpdatedAt(LocalDateTime.now());
+        } else if (contactUpdated.getEmail() == null && contactRequestDTO.getEmail() == null) {
+
+        } else if (!contactUpdated.getEmail().equals(contactRequestDTO.getEmail())) {
+            contactUpdated.setEmail(contactRequestDTO.getEmail());
+            contactUpdated.setUpdater(user);
+            contactUpdated.setUpdatedAt(LocalDateTime.now());
+        }
+
+        return contactRepository.save(contactUpdated);
+
     }
 }

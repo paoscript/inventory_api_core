@@ -25,4 +25,6 @@ public interface IContactRepository extends JpaRepository<Contact, Long> {
     @Modifying
     @Query(value = "insert into contacts (con_name, con_phone_number, con_email, con_active, con_created_at, con_updated_at, con_created_by_id, con_updated_by_id, con_provider_id) values (:name, :phoneNumber, :email, true, current_timestamp, current_timestamp, :idUser, :idUser, :idProvider)", nativeQuery = true)
     void insertContact(@Param("name") String name, @Param("phoneNumber") String phoneNumber, @Param("email") String email, @Param("idUser") Long idUser, @Param("idProvider") Long idProvider);
+
+    Contact findContactByIdAndActive(long id, Boolean active);
 }

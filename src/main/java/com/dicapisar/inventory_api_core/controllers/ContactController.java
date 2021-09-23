@@ -5,6 +5,7 @@ import com.dicapisar.inventory_api_core.dtos.resposes.ContactResponseDTO;
 import com.dicapisar.inventory_api_core.dtos.resposes.ListContactResponseDTO;
 import com.dicapisar.inventory_api_core.exceptions.ExistingRegistrationException;
 import com.dicapisar.inventory_api_core.exceptions.ListNotFoundException;
+import com.dicapisar.inventory_api_core.exceptions.RegisterNotFoundException;
 import com.dicapisar.inventory_api_core.services.IContactService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -41,4 +42,10 @@ public class ContactController {
         contactService.createNewContact(contactRequestDTO, id, 1L);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+
+    @PostMapping("/{id}")
+    public ResponseEntity<ContactResponseDTO> updateContactById(@PathVariable Long id, @RequestBody @Valid ContactRequestDTO contactRequestDTO) throws RegisterNotFoundException {
+        return new ResponseEntity<>(contactService.updateContactById(id, contactRequestDTO, 1L), HttpStatus.OK);
+    }
+
 }

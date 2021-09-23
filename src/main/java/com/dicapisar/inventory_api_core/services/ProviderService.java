@@ -121,7 +121,6 @@ public class ProviderService implements IProviderService {
             providerUpdated.setUpdatedAt(LocalDateTime.now());
         }
 
-
         if(providerUpdated.getEmail() == null && providerRequestDTO.getEmail() != null) {
             providerUpdated.setEmail(providerRequestDTO.getEmail());
             providerUpdated.setUpdater(user);
