@@ -1,4 +1,4 @@
-package com.dicapisar.inventory_api_core.Exeptions;
+package com.dicapisar.inventory_api_core.exceptions;
 
 import com.dicapisar.inventory_api_core.dtos.ErrorDTO;
 import lombok.Data;

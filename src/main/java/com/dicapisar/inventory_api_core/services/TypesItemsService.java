@@ -1,8 +1,8 @@
 package com.dicapisar.inventory_api_core.services;
 
-import com.dicapisar.inventory_api_core.Exeptions.ExistingRegistrationException;
-import com.dicapisar.inventory_api_core.Exeptions.ListNotFoundException;
-import com.dicapisar.inventory_api_core.Exeptions.RegisterNotFoundException;
+import com.dicapisar.inventory_api_core.exceptions.ExistingRegistrationException;
+import com.dicapisar.inventory_api_core.exceptions.ListNotFoundException;
+import com.dicapisar.inventory_api_core.exceptions.RegisterNotFoundException;
 import com.dicapisar.inventory_api_core.dtos.requests.TypeItemRequestDTO;
 import com.dicapisar.inventory_api_core.dtos.resposes.TypesItemsResponseDTO;
 import com.dicapisar.inventory_api_core.models.TypeItems;
@@ -45,11 +45,12 @@ public class TypesItemsService implements ITypesItemsService {
 
         if (!typeItemsList.isEmpty()) {
             if (isRegistrationAlreadyExists(typeItemsList, typeItemRequestDTO.getName())) {
-                throw new ExistingRegistrationException("Type Item", typeItemRequestDTO.getName());
+                throw new ExistingRegistrationException("Type Item", "name", typeItemRequestDTO.getName());
             }
-        } else {
-            typesItemsRepository.insertTypeItem(typeItemRequestDTO.getName(), idUser, typeItemRequestDTO.isPerishable());
         }
+
+        typesItemsRepository.insertTypeItem(typeItemRequestDTO.getName(), idUser, typeItemRequestDTO.isPerishable());
+
     }
 
     public TypesItemsResponseDTO getTypeItemRequestDTO(Long idTypeItem) throws RegisterNotFoundException {
@@ -94,15 +95,15 @@ public class TypesItemsService implements ITypesItemsService {
         TypeItems typeItemsUpdated = typeItems;
 
         if(!typeItemsUpdated.getName().equals(typeItemRequestDTO.getName())) {
-
-            if (!typeItemsUpdated.isPerishable() == typeItemRequestDTO.isPerishable()) {
-                typeItemsUpdated.setPerishable(typeItemRequestDTO.isPerishable());
-            }
-
             typeItemsUpdated.setName(typeItemRequestDTO.getName());
             typeItemsUpdated.setUpdater(user);
             typeItemsUpdated.setUpdatedAt(LocalDateTime.now());
+        }
 
+        if (!typeItemsUpdated.isPerishable() == typeItemRequestDTO.isPerishable()) {
+            typeItemsUpdated.setPerishable(typeItemRequestDTO.isPerishable());
+            typeItemsUpdated.setUpdater(user);
+            typeItemsUpdated.setUpdatedAt(LocalDateTime.now());
         }
 
         return typesItemsRepository.save(typeItemsUpdated);
