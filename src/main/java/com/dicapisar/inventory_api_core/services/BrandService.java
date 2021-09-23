@@ -46,11 +46,11 @@ public class BrandService implements IBrandService{
 
         if (!brandList.isEmpty()) {
             if (isRegistrationAlreadyExists(brandList, brandCreateRequestDTO.getName())) {
-                throw new ExistingRegistrationException( "Brand" , brandCreateRequestDTO.getName());
+                throw new ExistingRegistrationException( "Brand" , "name" ,brandCreateRequestDTO.getName());
             }
-        } else {
-            brandRepository.insertBrand(brandCreateRequestDTO.getName(), idUser);
         }
+
+        brandRepository.insertBrand(brandCreateRequestDTO.getName(), idUser);
 
     }
 

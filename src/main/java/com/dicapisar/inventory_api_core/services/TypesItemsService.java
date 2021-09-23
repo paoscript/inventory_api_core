@@ -45,11 +45,12 @@ public class TypesItemsService implements ITypesItemsService {
 
         if (!typeItemsList.isEmpty()) {
             if (isRegistrationAlreadyExists(typeItemsList, typeItemRequestDTO.getName())) {
-                throw new ExistingRegistrationException("Type Item", typeItemRequestDTO.getName());
+                throw new ExistingRegistrationException("Type Item", "name", typeItemRequestDTO.getName());
             }
-        } else {
-            typesItemsRepository.insertTypeItem(typeItemRequestDTO.getName(), idUser, typeItemRequestDTO.isPerishable());
         }
+
+        typesItemsRepository.insertTypeItem(typeItemRequestDTO.getName(), idUser, typeItemRequestDTO.isPerishable());
+
     }
 
     public TypesItemsResponseDTO getTypeItemRequestDTO(Long idTypeItem) throws RegisterNotFoundException {

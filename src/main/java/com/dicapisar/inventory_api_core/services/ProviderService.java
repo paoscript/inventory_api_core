@@ -1,6 +1,8 @@
 package com.dicapisar.inventory_api_core.services;
 
+import com.dicapisar.inventory_api_core.dtos.requests.ProviderRequestDTO;
 import com.dicapisar.inventory_api_core.dtos.resposes.ProviderResponseDTO;
+import com.dicapisar.inventory_api_core.exceptions.ExistingRegistrationException;
 import com.dicapisar.inventory_api_core.exceptions.ListNotFoundException;
 import com.dicapisar.inventory_api_core.models.Provider;
 import com.dicapisar.inventory_api_core.repositories.IProviderRepository;
@@ -33,5 +35,39 @@ public class ProviderService implements IProviderService {
         }
 
         return providerResponseDTOList;
+    }
+
+    public void createNewProvider(ProviderRequestDTO providerRequestDTO, Long idUser) throws ExistingRegistrationException {
+        List<Provider> providerList = providerRepository.getProviderByName(providerRequestDTO.getName());
+
+        if (!providerList.isEmpty()) {
+            if (isRegistrationAlreadyExistsByName(providerList, providerRequestDTO.getName())) {
+                throw new ExistingRegistrationException("Provider", "name", providerRequestDTO.getName());
+            }
+            if (isRegistrationAlreadyExistsByDocumentNumber(providerList, providerRequestDTO.getDocumentNumber())) {
+                throw new ExistingRegistrationException("Provider", "documentNumber", providerRequestDTO.getDocumentNumber());
+            }
+        }
+
+        providerRepository.insertProvider(providerRequestDTO.getName(), providerRequestDTO.getDocumentNumber(), providerRequestDTO.getPhoneNumber(), providerRequestDTO.getEmail(), providerRequestDTO.getAddress(), idUser);
+
+    }
+
+    private boolean isRegistrationAlreadyExistsByName(List<Provider> providerList, String name) {
+        for (Provider provider : providerList) {
+            if (provider.getName().equals(name)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isRegistrationAlreadyExistsByDocumentNumber(List<Provider> providerList, String documentNumber) {
+        for (Provider provider : providerList) {
+            if (provider.getDocumentNumber().equals(documentNumber)){
+                return true;
+            }
+        }
+        return false;
     }
 }

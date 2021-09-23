@@ -16,15 +16,16 @@ public class ProviderRequestDTO {
     @NotEmpty(message = "The name must not be empty.")
     private String name;
 
-    @NotNull
-    @Pattern(regexp = "^[0-9]$", message = "The Document Number must not be Null and must be number from 0 to 9.")
+    @NotNull(message = "The Document Number must not be Null.")
+    @Pattern(regexp = "^[0-9]*$", message = "The Document Number must be number from 0 to 9.")
     private String documentNumber;
 
-    @NotNull
-    @Pattern(regexp = "^[0-9+-]$", message = "The Phone Number must not be Null and must have be number from 0 to 9, '+' or '-'.")
+    @NotNull(message = "The Phone Number must not be Null.")
+    @Pattern(regexp = "^[0-9+-]*$", message = "The Phone Number must have be number from 0 to 9, '+' or '-'.")
     private String phoneNumber;
 
     @Email(message = "The format Email not valid")
+    @Pattern(regexp=".+@.+\\..+", message="The format Email not valid")
     private String email;
 
     private String address;
