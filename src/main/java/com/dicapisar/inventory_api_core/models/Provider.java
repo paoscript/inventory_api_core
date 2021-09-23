@@ -27,11 +27,11 @@ public class Provider {
     @Column(name = "pro_phone_number", nullable = false)
     private String phoneNumber;
 
-    @Column(name = "pro_email", nullable = false)
+    @Column(name = "pro_email")
     private String email;
 
-    @Column(name = "pro_addres", nullable = false)
-    private String addres;
+    @Column(name = "pro_address")
+    private String address;
 
     @Column(name = "pro_active", nullable = false)
     private boolean active;

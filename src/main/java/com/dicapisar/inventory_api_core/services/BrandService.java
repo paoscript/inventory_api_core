@@ -1,8 +1,8 @@
 package com.dicapisar.inventory_api_core.services;
 
-import com.dicapisar.inventory_api_core.Exeptions.ExistingRegistrationException;
-import com.dicapisar.inventory_api_core.Exeptions.RegisterNotFoundException;
-import com.dicapisar.inventory_api_core.Exeptions.ListNotFoundException;
+import com.dicapisar.inventory_api_core.exceptions.ExistingRegistrationException;
+import com.dicapisar.inventory_api_core.exceptions.RegisterNotFoundException;
+import com.dicapisar.inventory_api_core.exceptions.ListNotFoundException;
 import com.dicapisar.inventory_api_core.dtos.requests.BrandRequestDTO;
 import com.dicapisar.inventory_api_core.dtos.resposes.BrandResponseDTO;
 import com.dicapisar.inventory_api_core.models.Brand;

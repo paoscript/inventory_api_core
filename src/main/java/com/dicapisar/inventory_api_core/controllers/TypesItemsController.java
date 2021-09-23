@@ -1,8 +1,8 @@
 package com.dicapisar.inventory_api_core.controllers;
 
-import com.dicapisar.inventory_api_core.Exeptions.ExistingRegistrationException;
-import com.dicapisar.inventory_api_core.Exeptions.ListNotFoundException;
-import com.dicapisar.inventory_api_core.Exeptions.RegisterNotFoundException;
+import com.dicapisar.inventory_api_core.exceptions.ExistingRegistrationException;
+import com.dicapisar.inventory_api_core.exceptions.ListNotFoundException;
+import com.dicapisar.inventory_api_core.exceptions.RegisterNotFoundException;
 import com.dicapisar.inventory_api_core.dtos.requests.TypeItemRequestDTO;
 import com.dicapisar.inventory_api_core.dtos.resposes.TypesItemsResponseDTO;
 import com.dicapisar.inventory_api_core.services.ITypesItemsService;

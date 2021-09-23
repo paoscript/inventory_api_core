@@ -1,6 +1,6 @@
 package com.dicapisar.inventory_api_core.controllers;
 
-import com.dicapisar.inventory_api_core.Exeptions.InventoryAPICoreException;
+import com.dicapisar.inventory_api_core.exceptions.InventoryAPICoreException;
 import com.dicapisar.inventory_api_core.dtos.ErrorDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
