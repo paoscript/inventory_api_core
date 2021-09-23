@@ -1,7 +1,9 @@
 package com.dicapisar.inventory_api_core.services;
 
+import com.dicapisar.inventory_api_core.dtos.requests.ContactRequestDTO;
 import com.dicapisar.inventory_api_core.dtos.resposes.ContactResponseDTO;
 import com.dicapisar.inventory_api_core.dtos.resposes.ListContactResponseDTO;
+import com.dicapisar.inventory_api_core.exceptions.ExistingRegistrationException;
 import com.dicapisar.inventory_api_core.exceptions.ListNotFoundException;
 import com.dicapisar.inventory_api_core.models.Contact;
 import com.dicapisar.inventory_api_core.repositories.IContactRepository;
@@ -62,4 +64,26 @@ public class ContactService implements IContactService {
 
     }
 
+    @Transactional
+    public void createNewContact(ContactRequestDTO contactRequestDTO, Long idProvider, Long idUser) throws ExistingRegistrationException {
+        List<Contact> contactList = contactRepository.getContactByNameAndIdProvider(contactRequestDTO.getName(), idProvider);
+
+        if (!contactList.isEmpty()) {
+            if (isRegistrationAlreadyExists(contactList, contactRequestDTO.getName())) {
+                throw new ExistingRegistrationException("Contact", "name", contactRequestDTO.getName());
+            }
+        }
+
+        contactRepository.insertContact(contactRequestDTO.getName(), contactRequestDTO.getPhoneNumber(), contactRequestDTO.getEmail(), idUser, idProvider);
+
+    }
+
+    private boolean isRegistrationAlreadyExists(List<Contact> contactList, String name) {
+        for (Contact contact : contactList) {
+            if (contact.getName().equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

@@ -1,7 +1,9 @@
 package com.dicapisar.inventory_api_core.controllers;
 
+import com.dicapisar.inventory_api_core.dtos.requests.ContactRequestDTO;
 import com.dicapisar.inventory_api_core.dtos.resposes.ContactResponseDTO;
 import com.dicapisar.inventory_api_core.dtos.resposes.ListContactResponseDTO;
+import com.dicapisar.inventory_api_core.exceptions.ExistingRegistrationException;
 import com.dicapisar.inventory_api_core.exceptions.ListNotFoundException;
 import com.dicapisar.inventory_api_core.services.IContactService;
 import lombok.AllArgsConstructor;
@@ -9,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -31,5 +34,11 @@ public class ContactController {
     @GetMapping("/list/provider/{id}")
     public ResponseEntity<ListContactResponseDTO> getListContactsByProvider(@RequestParam(name = "isActive", defaultValue = "true") Boolean isActive, @PathVariable Long id) throws ListNotFoundException {
         return new ResponseEntity<>(contactService.getListContactByProvider(isActive, id), HttpStatus.OK);
+    }
+
+    @PostMapping("/create/provider/{id}")
+    public ResponseEntity<?> createNewContact(@PathVariable Long id, @RequestBody @Valid ContactRequestDTO contactRequestDTO) throws ExistingRegistrationException {
+        contactService.createNewContact(contactRequestDTO, id, 1L);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }

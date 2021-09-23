@@ -16,7 +16,6 @@ public class ContactRequestDTO {
     @NotEmpty(message = "The name must not be empty.")
     private String name;
 
-    @NotNull(message = "The Phone Number must not be Null.")
     @Pattern(regexp = "^[0-9+-]*$", message = "The Phone Number must have be number from 0 to 9, '+' or '-'.")
     private String phoneNumber;
 
