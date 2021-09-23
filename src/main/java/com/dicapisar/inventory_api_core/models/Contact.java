@@ -21,14 +21,11 @@ public class Contact {
     @Column(name = "con_name", nullable = false)
     private String name;
 
-    @Column(name = "con_phone_number", nullable = false)
+    @Column(name = "con_phone_number")
     private String phoneNumber;
 
-    @Column(name = "con_email", nullable = false)
+    @Column(name = "con_email")
     private String email;
-
-    @Column(name = "con_addres", nullable = false)
-    private String addres;
 
     @Column(name = "con_active", nullable = false)
     private boolean active;

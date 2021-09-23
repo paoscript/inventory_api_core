@@ -7,11 +7,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProviderResponseDTO {
+public class ContactResponseDTO {
     private Long id;
     private String name;
-    private String documentNumber;
     private String phoneNumber;
     private String email;
-    private String address;
+    private ProviderResponseDTO provider;
 }
