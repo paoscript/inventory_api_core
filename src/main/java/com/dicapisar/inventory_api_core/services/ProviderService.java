@@ -72,6 +72,14 @@ public class ProviderService implements IProviderService {
         return ProviderUtil.toProviderResponseDTO(updateProvider(provider, providerRequestDTO, idUser));
     }
 
+    public void changeStatusActiveById(Long idProvider, Long idUser, Boolean status) throws RegisterNotFoundException {
+        Provider provider = providerRepository.findProviderByIdAndActive(idProvider, !status);
+        if (provider == null) {
+            throw new RegisterNotFoundException("Provider", idProvider);
+        }
+        changeStatusActivate(provider, idUser, status);
+    }
+
     private boolean isRegistrationAlreadyExistsByName(List<Provider> providerList, String name) {
         for (Provider provider : providerList) {
             if (provider.getName().equals(name)){
@@ -147,5 +155,17 @@ public class ProviderService implements IProviderService {
         }
 
         return providerRepository.save(providerUpdated);
+    }
+
+    private void changeStatusActivate(Provider provider, Long idUser, Boolean status) {
+        User user = userRepository.findUserById(idUser);
+
+        Provider providerUpdated = provider;
+
+        providerUpdated.setActive(status);
+        providerUpdated.setUpdater(user);
+        providerUpdated.setUpdatedAt(LocalDateTime.now());
+
+        providerRepository.save(providerUpdated);
     }
 }

@@ -41,4 +41,16 @@ public class ProviderController {
     public ResponseEntity<ProviderResponseDTO> updateProviderById(@PathVariable Long id, @RequestBody @Valid ProviderRequestDTO providerRequestDTO) throws RegisterNotFoundException {
         return new ResponseEntity<>(providerService.updateProviderById(id, providerRequestDTO, 1L), HttpStatus.OK);
     }
+
+    @PutMapping("/activate/{id}")
+    public ResponseEntity<?> activateProviderById(@PathVariable Long id) throws RegisterNotFoundException {
+        providerService.changeStatusActiveById(id, 1L, true);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PutMapping("/deactivate/{id}")
+    public ResponseEntity<?> deactivateProviderById(@PathVariable Long id) throws RegisterNotFoundException {
+        providerService.changeStatusActiveById(id, 1L, false);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

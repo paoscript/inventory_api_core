@@ -13,4 +13,5 @@ public interface IProviderService {
     void createNewProvider(ProviderRequestDTO providerRequestDTO, Long idUser) throws ExistingRegistrationException;
     ProviderResponseDTO getProviderResponseDTO(Long idProvider) throws RegisterNotFoundException;
     ProviderResponseDTO updateProviderById(Long idProvider, ProviderRequestDTO providerRequestDTO, Long idUser) throws RegisterNotFoundException;
+    public void changeStatusActiveById(Long idProvider, Long idUser, Boolean status) throws RegisterNotFoundException;
 }
