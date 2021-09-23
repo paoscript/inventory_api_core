@@ -7,6 +7,7 @@ public class ProviderUtil {
     public static ProviderResponseDTO toProviderResponseDTO(Provider provider) {
         ProviderResponseDTO providerResponseDTO = new ProviderResponseDTO();
 
+        providerResponseDTO.setId(provider.getId());
         providerResponseDTO.setName(provider.getName());
         providerResponseDTO.setDocumentNumber(provider.getDocumentNumber());
         providerResponseDTO.setPhoneNumber(provider.getPhoneNumber());
