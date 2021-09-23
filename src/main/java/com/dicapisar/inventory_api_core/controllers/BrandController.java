@@ -1,7 +1,7 @@
 package com.dicapisar.inventory_api_core.controllers;
 
-import com.dicapisar.inventory_api_core.Exeptions.BrandAlredyExistsException;
-import com.dicapisar.inventory_api_core.Exeptions.BrandNotFoundException;
+import com.dicapisar.inventory_api_core.Exeptions.ExistingRegistrationException;
+import com.dicapisar.inventory_api_core.Exeptions.RegisterNotFoundException;
 import com.dicapisar.inventory_api_core.Exeptions.ListNotFoundException;
 import com.dicapisar.inventory_api_core.dtos.requests.BrandRequestDTO;
 import com.dicapisar.inventory_api_core.dtos.resposes.BrandResponseDTO;
@@ -28,31 +28,31 @@ public class BrandController {
 
     @PostMapping("/create")
     public ResponseEntity<?> createNewBrand(@RequestBody @Valid BrandRequestDTO brandRequestDTO)
-            throws BrandAlredyExistsException {
+            throws ExistingRegistrationException {
         brandService.createNewBrand(brandRequestDTO, 1L);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<BrandResponseDTO> getBrandById(@PathVariable Long id)
-            throws BrandNotFoundException {
+            throws RegisterNotFoundException {
         return new ResponseEntity<>(brandService.getBrandResponseDTO(id), HttpStatus.OK);
     }
 
     @PostMapping("/{id}")
-    public ResponseEntity<BrandResponseDTO> updateBrandById(@PathVariable Long id, @RequestBody BrandRequestDTO brandRequestDTO)
-            throws BrandNotFoundException {
+    public ResponseEntity<BrandResponseDTO> updateBrandById(@PathVariable Long id, @RequestBody @Valid BrandRequestDTO brandRequestDTO)
+            throws RegisterNotFoundException {
         return new ResponseEntity<>(brandService.updateBrandById(id, brandRequestDTO, 1L), HttpStatus.OK);
     }
 
-    @PutMapping("deactivate/{id}")
-    public ResponseEntity<?> deactivateBrandById(@PathVariable Long id) throws BrandNotFoundException {
+    @PutMapping("/deactivate/{id}")
+    public ResponseEntity<?> deactivateBrandById(@PathVariable Long id) throws RegisterNotFoundException {
         brandService.changeStatusActiveById(id, 1L, false);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping("activate/{id}")
-    public ResponseEntity<?> activateBrandById(@PathVariable Long id) throws BrandNotFoundException {
+    @PutMapping("/activate/{id}")
+    public ResponseEntity<?> activateBrandById(@PathVariable Long id) throws RegisterNotFoundException {
         brandService.changeStatusActiveById(id, 1L, true);
         return new ResponseEntity<>(HttpStatus.OK);
     }

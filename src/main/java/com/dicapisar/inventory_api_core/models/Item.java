@@ -58,7 +58,7 @@ public class Item {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ite_type_item_id")
-    private TypeItem typeItem;
+    private TypeItems typeItem;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ite_brand_id")

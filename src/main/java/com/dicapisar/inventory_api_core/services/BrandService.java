@@ -1,7 +1,7 @@
 package com.dicapisar.inventory_api_core.services;
 
-import com.dicapisar.inventory_api_core.Exeptions.BrandAlredyExistsException;
-import com.dicapisar.inventory_api_core.Exeptions.BrandNotFoundException;
+import com.dicapisar.inventory_api_core.Exeptions.ExistingRegistrationException;
+import com.dicapisar.inventory_api_core.Exeptions.RegisterNotFoundException;
 import com.dicapisar.inventory_api_core.Exeptions.ListNotFoundException;
 import com.dicapisar.inventory_api_core.dtos.requests.BrandRequestDTO;
 import com.dicapisar.inventory_api_core.dtos.resposes.BrandResponseDTO;
@@ -40,13 +40,13 @@ public class BrandService implements IBrandService{
         return brandResponseDTOList;
     }
 
-    public void createNewBrand(BrandRequestDTO brandCreateRequestDTO, Long idUser) throws BrandAlredyExistsException {
+    public void createNewBrand(BrandRequestDTO brandCreateRequestDTO, Long idUser) throws ExistingRegistrationException {
 
         List<Brand> brandList = brandRepository.getBrandsByName(brandCreateRequestDTO.getName());
 
         if (!brandList.isEmpty()) {
             if (isRegistrationAlreadyExists(brandList, brandCreateRequestDTO.getName())) {
-                throw new BrandAlredyExistsException(brandCreateRequestDTO.getName());
+                throw new ExistingRegistrationException( "Brand" , brandCreateRequestDTO.getName());
             }
         } else {
             brandRepository.insertBrand(brandCreateRequestDTO.getName(), idUser);
@@ -54,28 +54,28 @@ public class BrandService implements IBrandService{
 
     }
 
-    public BrandResponseDTO getBrandResponseDTO(Long idBrand) throws BrandNotFoundException {
+    public BrandResponseDTO getBrandResponseDTO(Long idBrand) throws RegisterNotFoundException {
         Brand brand = brandRepository.findBrandByIdAndActive(idBrand, true);
         if(brand == null) {
-            throw new BrandNotFoundException(idBrand);
+            throw new RegisterNotFoundException("Brand", idBrand);
         }
         return BrandUtil.toBrandResponseDTO(brand);
     }
 
-    public BrandResponseDTO updateBrandById(Long idBrand, BrandRequestDTO brandRequestDTO, Long idUser) throws BrandNotFoundException {
+    public BrandResponseDTO updateBrandById(Long idBrand, BrandRequestDTO brandRequestDTO, Long idUser) throws RegisterNotFoundException {
         Brand brand = brandRepository.findBrandByIdAndActive(idBrand, true);
         if(brand == null) {
-            throw new BrandNotFoundException(idBrand);
+            throw new RegisterNotFoundException("Brand", idBrand);
         }
 
         return BrandUtil.toBrandResponseDTO(updateBrand(brand, brandRequestDTO, idUser));
 
     }
 
-    public void changeStatusActiveById(Long idBrand, Long idUser, Boolean status) throws BrandNotFoundException {
+    public void changeStatusActiveById(Long idBrand, Long idUser, Boolean status) throws RegisterNotFoundException {
         Brand brand = brandRepository.findBrandByIdAndActive(idBrand, !status);
         if(brand == null) {
-            throw new BrandNotFoundException(idBrand);
+            throw new RegisterNotFoundException("Brand", idBrand);
         }
 
         changeStatusActivate(brand, idUser, status);
