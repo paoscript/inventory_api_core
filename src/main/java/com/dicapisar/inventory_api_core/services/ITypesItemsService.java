@@ -13,4 +13,5 @@ public interface ITypesItemsService {
     void createNewTypeItem(TypeItemRequestDTO typeItemRequestDTO, Long idUser) throws ExistingRegistrationException;
     TypesItemsResponseDTO getTypeItemRequestDTO(Long idTypeItem) throws RegisterNotFoundException;
     TypesItemsResponseDTO updateTypeItemById(Long idTypeItem, TypeItemRequestDTO typeItemRequestDTO, Long idUser) throws RegisterNotFoundException;
+    void changeStatusActiveById(Long idTypeItem, Long idUser, Boolean status) throws RegisterNotFoundException;
 }

@@ -45,13 +45,13 @@ public class BrandController {
         return new ResponseEntity<>(brandService.updateBrandById(id, brandRequestDTO, 1L), HttpStatus.OK);
     }
 
-    @PutMapping("deactivate/{id}")
+    @PutMapping("/deactivate/{id}")
     public ResponseEntity<?> deactivateBrandById(@PathVariable Long id) throws RegisterNotFoundException {
         brandService.changeStatusActiveById(id, 1L, false);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping("activate/{id}")
+    @PutMapping("/activate/{id}")
     public ResponseEntity<?> activateBrandById(@PathVariable Long id) throws RegisterNotFoundException {
         brandService.changeStatusActiveById(id, 1L, true);
         return new ResponseEntity<>(HttpStatus.OK);

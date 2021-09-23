@@ -41,4 +41,16 @@ public class TypesItemsController {
     public ResponseEntity<TypesItemsResponseDTO> updateTypeItemById(@PathVariable long id, @RequestBody @Valid TypeItemRequestDTO typeItemRequestDTO) throws RegisterNotFoundException {
         return new ResponseEntity<>(typesItemsService.updateTypeItemById(id, typeItemRequestDTO, 1L), HttpStatus.OK);
     }
+
+    @PutMapping("/activate/{id}")
+    public ResponseEntity<?> activateTypeItemById(@PathVariable Long id) throws RegisterNotFoundException {
+        typesItemsService.changeStatusActiveById(id, 1L, true);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PutMapping("/deactivate/{id}")
+    public ResponseEntity<?> deactivateTypeItemById(@PathVariable Long id) throws RegisterNotFoundException {
+        typesItemsService.changeStatusActiveById(id, 1L, false);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

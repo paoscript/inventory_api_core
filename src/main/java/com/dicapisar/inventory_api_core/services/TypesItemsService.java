@@ -69,6 +69,15 @@ public class TypesItemsService implements ITypesItemsService {
        return TypeItemsUtil.toTypesItemsResponseDTO(updateTypeItem(typeItems, typeItemRequestDTO, idUser));
     }
 
+    public void changeStatusActiveById(Long idTypeItem, Long idUser, Boolean status) throws RegisterNotFoundException {
+        TypeItems typeItems = typesItemsRepository.findTypeItemsByIdAndActive(idTypeItem, !status);
+        if (typeItems == null) {
+            throw new RegisterNotFoundException("Type Item", idTypeItem);
+        }
+
+        changeStatus(typeItems, idUser, status);
+    }
+
     private boolean isRegistrationAlreadyExists(List<TypeItems> typeItemsList, String name) {
         for (TypeItems typeItems: typeItemsList) {
             if (typeItems.getName().equals(name)) {
@@ -97,5 +106,17 @@ public class TypesItemsService implements ITypesItemsService {
         }
 
         return typesItemsRepository.save(typeItemsUpdated);
+    }
+
+    private void changeStatus(TypeItems typeItems, Long idUser, Boolean status) {
+        User user = userRepository.findUserById(idUser);
+
+        TypeItems typeItemsUpdated = typeItems;
+
+        typeItemsUpdated.setActive(status);
+        typeItemsUpdated.setUpdater(user);
+        typeItemsUpdated.setUpdatedAt(LocalDateTime.now());
+
+        typesItemsRepository.save(typeItemsUpdated);
     }
 }
