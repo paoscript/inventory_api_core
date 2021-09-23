@@ -4,6 +4,7 @@ import com.dicapisar.inventory_api_core.dtos.requests.ProviderRequestDTO;
 import com.dicapisar.inventory_api_core.dtos.resposes.ProviderResponseDTO;
 import com.dicapisar.inventory_api_core.exceptions.ExistingRegistrationException;
 import com.dicapisar.inventory_api_core.exceptions.ListNotFoundException;
+import com.dicapisar.inventory_api_core.exceptions.RegisterNotFoundException;
 import com.dicapisar.inventory_api_core.models.Provider;
 import com.dicapisar.inventory_api_core.repositories.IProviderRepository;
 import com.dicapisar.inventory_api_core.repositories.IUserRepository;
@@ -51,6 +52,14 @@ public class ProviderService implements IProviderService {
 
         providerRepository.insertProvider(providerRequestDTO.getName(), providerRequestDTO.getDocumentNumber(), providerRequestDTO.getPhoneNumber(), providerRequestDTO.getEmail(), providerRequestDTO.getAddress(), idUser);
 
+    }
+
+    public ProviderResponseDTO getProviderResponseDTO(Long idProvider) throws RegisterNotFoundException {
+        Provider provider = providerRepository.findProviderByIdAndActive(idProvider, true);
+        if (provider == null) {
+            throw new RegisterNotFoundException("Provider", idProvider);
+        }
+        return ProviderUtil.toProviderResponseDTO(provider);
     }
 
     private boolean isRegistrationAlreadyExistsByName(List<Provider> providerList, String name) {

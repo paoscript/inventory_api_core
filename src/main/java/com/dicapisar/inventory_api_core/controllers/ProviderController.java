@@ -4,6 +4,7 @@ import com.dicapisar.inventory_api_core.dtos.requests.ProviderRequestDTO;
 import com.dicapisar.inventory_api_core.dtos.resposes.ProviderResponseDTO;
 import com.dicapisar.inventory_api_core.exceptions.ExistingRegistrationException;
 import com.dicapisar.inventory_api_core.exceptions.ListNotFoundException;
+import com.dicapisar.inventory_api_core.exceptions.RegisterNotFoundException;
 import com.dicapisar.inventory_api_core.services.IProviderService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -29,5 +30,10 @@ public class ProviderController {
     public ResponseEntity<?> createNewProvider(@RequestBody @Valid ProviderRequestDTO providerRequestDTO) throws ExistingRegistrationException {
         providerService.createNewProvider(providerRequestDTO, 1L);
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ProviderResponseDTO> getProviderResponseDTOById(@PathVariable Long id) throws RegisterNotFoundException {
+        return new ResponseEntity<>(providerService.getProviderResponseDTO(id), HttpStatus.OK);
     }
 }
