@@ -53,4 +53,16 @@ public class ContactController {
         return new ResponseEntity<>(contactService.updateContactById(id, contactRequestDTO, 1L), HttpStatus.OK);
     }
 
+    @PutMapping("/activate/{id}")
+    public ResponseEntity<?> activateContactById(@PathVariable Long id) throws RegisterNotFoundException {
+        contactService.changeStatusContactById(id, 1L, true);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PutMapping("/deactivate/{id}")
+    public ResponseEntity<?> deactivateContactById(@PathVariable Long id) throws RegisterNotFoundException {
+        contactService.changeStatusContactById(id, 1L, false);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }

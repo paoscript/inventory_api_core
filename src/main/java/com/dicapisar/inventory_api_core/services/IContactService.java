@@ -18,4 +18,5 @@ public interface IContactService {
     void createNewContact(ContactRequestDTO contactRequestDTO, Long idProvider, Long idUser) throws ExistingRegistrationException;
     ContactResponseDTO updateContactById(Long idContact, ContactRequestDTO contactRequestDTO, Long idUser) throws RegisterNotFoundException;
     ContactResponseDTO getContactResponseDTO(Long idContact) throws RegisterNotFoundException;
+    void changeStatusContactById(Long idContact, Long idUser, Boolean status) throws RegisterNotFoundException;
 }

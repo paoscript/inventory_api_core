@@ -100,6 +100,18 @@ public class ContactService implements IContactService {
         return ContactUtil.toContactResponseDTO(updateContact(contact, contactRequestDTO, idUser));
     }
 
+    @Transactional
+    public void changeStatusContactById(Long idContact, Long idUser, Boolean status) throws RegisterNotFoundException {
+        Contact contact = contactRepository.findContactByIdAndActive(idContact, !status);
+
+        if (contact == null) {
+            throw new RegisterNotFoundException("Contact", idContact);
+        }
+
+        changeStatus(contact, idUser, status);
+    }
+
+
     private boolean isRegistrationAlreadyExists(List<Contact> contactList, String name) {
         for (Contact contact : contactList) {
             if (contact.getName().equals(name)) {
@@ -154,5 +166,17 @@ public class ContactService implements IContactService {
 
         return contactRepository.save(contactUpdated);
 
+    }
+
+    private void changeStatus(Contact contact, Long idUser, Boolean status) {
+        User user = userRepository.findUserById(idUser);
+
+        Contact contactUpdated = contact;
+
+        contactUpdated.setActive(status);
+        contactUpdated.setUpdater(user);
+        contactUpdated.setUpdatedAt(LocalDateTime.now());
+
+        contactRepository.save(contactUpdated);
     }
 }
