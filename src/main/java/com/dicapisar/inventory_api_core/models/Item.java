@@ -30,13 +30,10 @@ public class Item {
     @Column(name = "ite_price", nullable = false)
     private int price;
 
-    @Column(name = "ite_date_perishable", nullable = false)
-    private LocalDateTime datePerishable;
-
-    @Column(name = "ite_barcode", nullable = false)
+    @Column(name = "ite_barcode")
     private String barcode;
 
-    @Column(name = "ite_qr_code", nullable = false)
+    @Column(name = "ite_qr_code")
     private String qrCode;
 
     @Column(name = "ite_active", nullable = false)
@@ -63,12 +60,5 @@ public class Item {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ite_brand_id")
     private Brand brand;
-    
-    
-    
-    
-    
-    
-    
-    
+
 }
