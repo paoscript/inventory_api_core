@@ -13,4 +13,6 @@ public interface IItemRepository extends JpaRepository<Item, Long> {
 
     @Query("select i from Item i where i.active =:isActive")
     List<Item> getListBrand(@Param("isActive") Boolean isActive);
+
+    Item findItemByIdAndActive(Long id, Boolean active);
 }

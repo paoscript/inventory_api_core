@@ -18,7 +18,6 @@ public class ItemResponseDTO {
     private int count;
     private double averageCost;
     private int price;
-    private LocalDateTime datePerishable;
     private String barcode;
     private String qrCode;
     private TypesItemsResponseDTO typeItem;
