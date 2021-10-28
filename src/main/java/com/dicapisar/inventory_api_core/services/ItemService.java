@@ -2,6 +2,7 @@ package com.dicapisar.inventory_api_core.services;
 
 import com.dicapisar.inventory_api_core.dtos.requests.ItemRequestDTO;
 import com.dicapisar.inventory_api_core.dtos.resposes.ItemResponseDTO;
+import com.dicapisar.inventory_api_core.exceptions.ExistingRegistrationException;
 import com.dicapisar.inventory_api_core.exceptions.ListNotFoundException;
 import com.dicapisar.inventory_api_core.exceptions.RegisterNotFoundException;
 import com.dicapisar.inventory_api_core.models.Brand;
@@ -66,6 +67,34 @@ public class ItemService implements IItemService{
         return ItemUtil.toItemResponseDTO(updateItem(item, itemRequestDTO, idUser));
     }
 
+    public void createNewItem(ItemRequestDTO itemRequestDTO, Long idUser) throws ExistingRegistrationException, RegisterNotFoundException {
+        List<Item> itemList = itemRepository.getItemByName(itemRequestDTO.getName());
+        Brand brand = brandRepository.findBrandByIdAndActive(itemRequestDTO.getIdBrand(), true);
+        TypeItems typeItems = typesItemsRepository.findTypeItemsByIdAndActive(itemRequestDTO.getIdTypeItem(), true);
+
+        if (!itemList.isEmpty()) {
+            if (isRegistrationAlreadyExist(itemList, itemRequestDTO.getName())) {
+                throw new ExistingRegistrationException("Item", "name", itemRequestDTO.getName());
+            }
+        }
+
+        if(brand == null) {
+            throw new RegisterNotFoundException("Brand", itemRequestDTO.getIdBrand());
+        }
+
+        if(typeItems == null) {
+            throw new RegisterNotFoundException("Type Item", itemRequestDTO.getIdTypeItem());
+        }
+
+        itemRepository.insertItem(itemRequestDTO.getName(),
+                itemRequestDTO.getPrice(),
+                itemRequestDTO.getBarcode(),
+                itemRequestDTO.getQrCode(),
+                itemRequestDTO.getIdTypeItem(),
+                itemRequestDTO.getIdBrand(),
+                idUser);
+    }
+
     private Item updateItem(Item item, ItemRequestDTO itemRequestDTO, Long idUser) throws RegisterNotFoundException {
         User user = userRepository.findUserById(idUser);
 
@@ -113,5 +142,14 @@ public class ItemService implements IItemService{
 
         return itemRepository.save(itemUpdated);
 
+    }
+
+    private boolean isRegistrationAlreadyExist(List<Item> itemList, String name) {
+        for (Item item : itemList) {
+            if (item.getName().equals(name)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

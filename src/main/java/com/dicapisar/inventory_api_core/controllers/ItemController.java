@@ -2,6 +2,7 @@ package com.dicapisar.inventory_api_core.controllers;
 
 import com.dicapisar.inventory_api_core.dtos.requests.ItemRequestDTO;
 import com.dicapisar.inventory_api_core.dtos.resposes.ItemResponseDTO;
+import com.dicapisar.inventory_api_core.exceptions.ExistingRegistrationException;
 import com.dicapisar.inventory_api_core.exceptions.ListNotFoundException;
 import com.dicapisar.inventory_api_core.exceptions.RegisterNotFoundException;
 import com.dicapisar.inventory_api_core.services.IItemService;
@@ -33,5 +34,11 @@ public class ItemController {
     @PostMapping("/{id}")
     public ResponseEntity<ItemResponseDTO> updateItemById(@PathVariable Long id, @RequestBody @Valid ItemRequestDTO itemRequestDTO) throws RegisterNotFoundException {
         return new ResponseEntity<>(itemService.updateItemById(id, itemRequestDTO, 1L), HttpStatus.OK);
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<?> createNewItem(@RequestBody @Valid ItemRequestDTO itemRequestDTO) throws ExistingRegistrationException, RegisterNotFoundException {
+        itemService.createNewItem(itemRequestDTO, 1L);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }
