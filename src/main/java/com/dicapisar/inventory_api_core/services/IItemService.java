@@ -16,4 +16,6 @@ public interface IItemService {
     ItemResponseDTO updateItemById(Long idItem, ItemRequestDTO itemRequestDTO, Long idUser) throws RegisterNotFoundException;
 
     void createNewItem(ItemRequestDTO itemRequestDTO, Long idUser) throws ExistingRegistrationException, RegisterNotFoundException;
+
+    void changeStatusActiveById(Long idItem, Long idUser, Boolean status) throws RegisterNotFoundException;
 }

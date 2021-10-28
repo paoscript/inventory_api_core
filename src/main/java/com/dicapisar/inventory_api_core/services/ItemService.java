@@ -95,6 +95,16 @@ public class ItemService implements IItemService{
                 idUser);
     }
 
+    public void changeStatusActiveById(Long idItem, Long idUser, Boolean status) throws RegisterNotFoundException {
+        Item item = itemRepository.findItemByIdAndActive(idItem, !status);
+
+        if (item == null) {
+            throw new RegisterNotFoundException("Item", idItem);
+        }
+
+        changeStatusActivate(item, idUser, status);
+    }
+
     private Item updateItem(Item item, ItemRequestDTO itemRequestDTO, Long idUser) throws RegisterNotFoundException {
         User user = userRepository.findUserById(idUser);
 
@@ -151,5 +161,17 @@ public class ItemService implements IItemService{
             }
         }
         return false;
+    }
+
+    private void changeStatusActivate(Item item, Long idUser, Boolean status) {
+        User user = userRepository.findUserById(idUser);
+
+        Item itemUpdated = item;
+
+        itemUpdated.setActive(status);
+        itemUpdated.setUpdater(user);
+        itemUpdated.setUpdatedAt(LocalDateTime.now());
+
+        itemRepository.save(itemUpdated);
     }
 }

@@ -41,4 +41,16 @@ public class ItemController {
         itemService.createNewItem(itemRequestDTO, 1L);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+
+    @PutMapping("/deactivate/{id}")
+    public ResponseEntity<?> deactivateItemById(@PathVariable Long id) throws RegisterNotFoundException {
+        itemService.changeStatusActiveById(id, 1L, false);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PutMapping("/activate/{id}")
+    public ResponseEntity<?> activateItemById(@PathVariable Long id) throws RegisterNotFoundException {
+        itemService.changeStatusActiveById(id, 1L, true);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
