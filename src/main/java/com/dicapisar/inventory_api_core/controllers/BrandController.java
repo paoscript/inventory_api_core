@@ -1,5 +1,6 @@
 package com.dicapisar.inventory_api_core.controllers;
 
+import com.dicapisar.inventory_api_core.exceptions.ErrorUserWithoutPermissions;
 import com.dicapisar.inventory_api_core.exceptions.ExistingRegistrationException;
 import com.dicapisar.inventory_api_core.exceptions.RegisterNotFoundException;
 import com.dicapisar.inventory_api_core.exceptions.ListNotFoundException;
@@ -8,13 +9,12 @@ import com.dicapisar.inventory_api_core.dtos.resposes.BrandResponseDTO;
 import com.dicapisar.inventory_api_core.services.IBrandService;
 import com.dicapisar.inventory_api_core.utils.SessionUtil;
 import lombok.AllArgsConstructor;
-import org.springframework.boot.web.servlet.server.Session;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.SessionCookieConfig;
-import javax.servlet.http.HttpServletRequest;
+import static com.dicapisar.inventory_api_core.commons.APIInventoryCoreConstants.ADMIN;
+
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -28,55 +28,59 @@ public class BrandController {
     private IBrandService brandService;
 
     @GetMapping("/list")
-    public ResponseEntity<List<BrandResponseDTO>> getListBrand(@RequestParam(name = "isActive", defaultValue = "true") Boolean isActive, HttpSession session) throws ListNotFoundException {
+    public ResponseEntity<List<BrandResponseDTO>> getListBrand(@RequestParam(name = "isActive", defaultValue = "true")
+                                                                           Boolean isActive, HttpSession session)
+            throws ListNotFoundException, ErrorUserWithoutPermissions {
         ArrayList<String> permissionList = new ArrayList<>();
-        permissionList.add("ADMIN");
+        permissionList.add(ADMIN);
         if( !SessionUtil.isSessionExist(session)) {
             session.invalidate();
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            throw new ErrorUserWithoutPermissions();
         }
         if( !SessionUtil.isSessionWithPermissions(session, permissionList)) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            throw new ErrorUserWithoutPermissions();
         }
         return new ResponseEntity<>(brandService.getListBrand(isActive), HttpStatus.OK);
     }
 
     @PostMapping("/create")
     public ResponseEntity<?> createNewBrand(@RequestBody @Valid BrandRequestDTO brandRequestDTO, HttpSession session)
-            throws ExistingRegistrationException {
+            throws ExistingRegistrationException, ErrorUserWithoutPermissions {
         ArrayList<String> permissionList = new ArrayList<>();
-        permissionList.add("ADMIN");
+        permissionList.add(ADMIN);
         if( !SessionUtil.isSessionExist(session)) {
             session.invalidate();
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            throw new ErrorUserWithoutPermissions();
         }
         if( !SessionUtil.isSessionWithPermissions(session, permissionList)) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            throw new ErrorUserWithoutPermissions();
         }
-        brandService.createNewBrand(brandRequestDTO, (Long) session.getAttribute("Id"));
+        brandService.createNewBrand(brandRequestDTO, SessionUtil.getUserId(session));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<BrandResponseDTO> getBrandById(@PathVariable Long id, HttpSession session)
-            throws RegisterNotFoundException {
+            throws RegisterNotFoundException, ErrorUserWithoutPermissions {
         ArrayList<String> permissionList = new ArrayList<>();
-        permissionList.add("ADMIN");
+        permissionList.add(ADMIN);
         if( !SessionUtil.isSessionExist(session)) {
             session.invalidate();
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            throw new ErrorUserWithoutPermissions();
         }
         if( !SessionUtil.isSessionWithPermissions(session, permissionList)) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            throw new ErrorUserWithoutPermissions();
         }
         return new ResponseEntity<>(brandService.getBrandResponseDTO(id), HttpStatus.OK);
     }
 
     @PostMapping("/{id}")
-    public ResponseEntity<BrandResponseDTO> updateBrandById(@PathVariable Long id, @RequestBody @Valid BrandRequestDTO brandRequestDTO, HttpSession session)
+    public ResponseEntity<BrandResponseDTO> updateBrandById(@PathVariable Long id,
+                                                            @RequestBody @Valid BrandRequestDTO brandRequestDTO,
+                                                            HttpSession session)
             throws RegisterNotFoundException {
         ArrayList<String> permissionList = new ArrayList<>();
-        permissionList.add("ADMIN");
+        permissionList.add(ADMIN);
         if( !SessionUtil.isSessionExist(session)) {
             session.invalidate();
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
@@ -84,36 +88,38 @@ public class BrandController {
         if( !SessionUtil.isSessionWithPermissions(session, permissionList)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
-        return new ResponseEntity<>(brandService.updateBrandById(id, brandRequestDTO, (Long) session.getAttribute("Id")), HttpStatus.OK);
+        return new ResponseEntity<>(brandService.updateBrandById(id, brandRequestDTO, SessionUtil.getUserId(session)), HttpStatus.OK);
     }
 
     @PutMapping("/deactivate/{id}")
-    public ResponseEntity<?> deactivateBrandById(@PathVariable Long id, HttpSession session) throws RegisterNotFoundException {
+    public ResponseEntity<?> deactivateBrandById(@PathVariable Long id, HttpSession session)
+            throws RegisterNotFoundException, ErrorUserWithoutPermissions {
         ArrayList<String> permissionList = new ArrayList<>();
-        permissionList.add("ADMIN");
+        permissionList.add(ADMIN);
         if( !SessionUtil.isSessionExist(session)) {
             session.invalidate();
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            throw new ErrorUserWithoutPermissions();
         }
         if( !SessionUtil.isSessionWithPermissions(session, permissionList)) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            throw new ErrorUserWithoutPermissions();
         }
-        brandService.changeStatusActiveById(id, (Long) session.getAttribute("Id"), false);
+        brandService.changeStatusActiveById(id, SessionUtil.getUserId(session), false);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping("/activate/{id}")
-    public ResponseEntity<?> activateBrandById(@PathVariable Long id, HttpSession session) throws RegisterNotFoundException {
+    public ResponseEntity<?> activateBrandById(@PathVariable Long id, HttpSession session)
+            throws RegisterNotFoundException, ErrorUserWithoutPermissions {
         ArrayList<String> permissionList = new ArrayList<>();
-        permissionList.add("ADMIN");
+        permissionList.add(ADMIN);
         if( !SessionUtil.isSessionExist(session)) {
             session.invalidate();
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            throw new ErrorUserWithoutPermissions();
         }
         if( !SessionUtil.isSessionWithPermissions(session, permissionList)) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            throw new ErrorUserWithoutPermissions();
         }
-        brandService.changeStatusActiveById(id, (Long) session.getAttribute("Id"), true);
+        brandService.changeStatusActiveById(id, SessionUtil.getUserId(session), true);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

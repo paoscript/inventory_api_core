@@ -2,6 +2,7 @@ package com.dicapisar.inventory_api_core.controllers;
 
 import com.dicapisar.inventory_api_core.dtos.requests.ProviderRequestDTO;
 import com.dicapisar.inventory_api_core.dtos.resposes.ProviderResponseDTO;
+import com.dicapisar.inventory_api_core.exceptions.ErrorUserWithoutPermissions;
 import com.dicapisar.inventory_api_core.exceptions.ExistingRegistrationException;
 import com.dicapisar.inventory_api_core.exceptions.ListNotFoundException;
 import com.dicapisar.inventory_api_core.exceptions.RegisterNotFoundException;
@@ -17,6 +18,8 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.dicapisar.inventory_api_core.commons.APIInventoryCoreConstants.ADMIN;
+
 @RestController
 @AllArgsConstructor
 @RequestMapping("/provider")
@@ -25,89 +28,100 @@ public class ProviderController {
     private IProviderService providerService;
 
     @GetMapping("/list")
-    public ResponseEntity<List<ProviderResponseDTO>> getListProvider(@RequestParam(name = "isActive", defaultValue = "true") Boolean isActive, HttpSession session) throws ListNotFoundException {
+    public ResponseEntity<List<ProviderResponseDTO>> getListProvider(@RequestParam(name = "isActive", defaultValue = "true") Boolean isActive,
+                                                                     HttpSession session)
+            throws ListNotFoundException, ErrorUserWithoutPermissions {
         ArrayList<String> permissionList = new ArrayList<>();
-        permissionList.add("ADMIN");
+        permissionList.add(ADMIN);
         if( !SessionUtil.isSessionExist(session)) {
             session.invalidate();
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            throw new ErrorUserWithoutPermissions();
         }
         if( !SessionUtil.isSessionWithPermissions(session, permissionList)) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            throw new ErrorUserWithoutPermissions();
         }
         return new ResponseEntity<>(providerService.getListProvider(isActive), HttpStatus.OK);
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createNewProvider(@RequestBody @Valid ProviderRequestDTO providerRequestDTO, HttpSession session) throws ExistingRegistrationException {
+    public ResponseEntity<?> createNewProvider(@RequestBody @Valid ProviderRequestDTO providerRequestDTO,
+                                               HttpSession session)
+            throws ExistingRegistrationException, ErrorUserWithoutPermissions {
         ArrayList<String> permissionList = new ArrayList<>();
-        permissionList.add("ADMIN");
+        permissionList.add(ADMIN);
         if( !SessionUtil.isSessionExist(session)) {
             session.invalidate();
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            throw new ErrorUserWithoutPermissions();
         }
         if( !SessionUtil.isSessionWithPermissions(session, permissionList)) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            throw new ErrorUserWithoutPermissions();
         }
-        providerService.createNewProvider(providerRequestDTO, 1L);
+        providerService.createNewProvider(providerRequestDTO, SessionUtil.getUserId(session));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProviderResponseDTO> getProviderResponseDTOById(@PathVariable Long id, HttpSession session) throws RegisterNotFoundException {
+    public ResponseEntity<ProviderResponseDTO> getProviderResponseDTOById(@PathVariable Long id, HttpSession session)
+            throws RegisterNotFoundException, ErrorUserWithoutPermissions {
         ArrayList<String> permissionList = new ArrayList<>();
-        permissionList.add("ADMIN");
+        permissionList.add(ADMIN);
         if( !SessionUtil.isSessionExist(session)) {
             session.invalidate();
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            throw new ErrorUserWithoutPermissions();
         }
         if( !SessionUtil.isSessionWithPermissions(session, permissionList)) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            throw new ErrorUserWithoutPermissions();
         }
         return new ResponseEntity<>(providerService.getProviderResponseDTO(id), HttpStatus.OK);
     }
 
     @PostMapping("/{id}")
-    public ResponseEntity<ProviderResponseDTO> updateProviderById(@PathVariable Long id, @RequestBody @Valid ProviderRequestDTO providerRequestDTO, HttpSession session) throws RegisterNotFoundException {
+    public ResponseEntity<ProviderResponseDTO> updateProviderById(@PathVariable Long id,
+                                                                  @RequestBody @Valid ProviderRequestDTO providerRequestDTO,
+                                                                  HttpSession session)
+            throws RegisterNotFoundException, ErrorUserWithoutPermissions {
         ArrayList<String> permissionList = new ArrayList<>();
-        permissionList.add("ADMIN");
+        permissionList.add(ADMIN);
         if( !SessionUtil.isSessionExist(session)) {
             session.invalidate();
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            throw new ErrorUserWithoutPermissions();
         }
         if( !SessionUtil.isSessionWithPermissions(session, permissionList)) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            throw new ErrorUserWithoutPermissions();
         }
-        return new ResponseEntity<>(providerService.updateProviderById(id, providerRequestDTO, 1L), HttpStatus.OK);
+        return new ResponseEntity<>(providerService.updateProviderById(id, providerRequestDTO,
+                SessionUtil.getUserId(session)), HttpStatus.OK);
     }
 
     @PutMapping("/activate/{id}")
-    public ResponseEntity<?> activateProviderById(@PathVariable Long id, HttpSession session) throws RegisterNotFoundException {
+    public ResponseEntity<?> activateProviderById(@PathVariable Long id, HttpSession session)
+            throws RegisterNotFoundException, ErrorUserWithoutPermissions {
         ArrayList<String> permissionList = new ArrayList<>();
-        permissionList.add("ADMIN");
+        permissionList.add(ADMIN);
         if( !SessionUtil.isSessionExist(session)) {
             session.invalidate();
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            throw new ErrorUserWithoutPermissions();
         }
         if( !SessionUtil.isSessionWithPermissions(session, permissionList)) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            throw new ErrorUserWithoutPermissions();
         }
-        providerService.changeStatusActiveById(id, 1L, true);
+        providerService.changeStatusActiveById(id, SessionUtil.getUserId(session), true);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping("/deactivate/{id}")
-    public ResponseEntity<?> deactivateProviderById(@PathVariable Long id, HttpSession session) throws RegisterNotFoundException {
+    public ResponseEntity<?> deactivateProviderById(@PathVariable Long id, HttpSession session)
+            throws RegisterNotFoundException, ErrorUserWithoutPermissions {
         ArrayList<String> permissionList = new ArrayList<>();
-        permissionList.add("ADMIN");
+        permissionList.add(ADMIN);
         if( !SessionUtil.isSessionExist(session)) {
             session.invalidate();
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            throw new ErrorUserWithoutPermissions();
         }
         if( !SessionUtil.isSessionWithPermissions(session, permissionList)) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            throw new ErrorUserWithoutPermissions();
         }
-        providerService.changeStatusActiveById(id, 1L, false);
+        providerService.changeStatusActiveById(id, SessionUtil.getUserId(session), false);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
