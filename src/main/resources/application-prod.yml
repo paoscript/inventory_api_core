@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: root
-    password: Password123@.
-    url: jdbc:mysql://localhost:3306/inventory_db #?useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8
+    username: ${USER_DATABASE}
+    password: ${PASSWORD_DATABASE}
+    url: jdbc:mysql://${HOST_DATABASE}:${PORT_DATABASE}/${NAME_DATABASE}_prod
     initialization-mode: always
     initialize: true
 
@@ -22,10 +22,10 @@ spring:
       namespace: spring:session
 
   redis:
-    host: localhost
-    port: 6379
+    host: ${HOST_REDIS}
+    port: ${PORT_REDIS}
 
   servlet:
     servlet:
       session:
-        timeout: 60000
+        timeout: 3600000
