@@ -40,9 +40,10 @@ public class BrandService implements IBrandService{
         return brandResponseDTOList;
     }
 
-    public void createNewBrand(BrandRequestDTO brandCreateRequestDTO, Long idUser) throws ExistingRegistrationException {
+    public BrandResponseDTO createNewBrand(BrandRequestDTO brandCreateRequestDTO, Long idUser) throws ExistingRegistrationException {
 
         List<Brand> brandList = brandRepository.getBrandsByName(brandCreateRequestDTO.getName());
+        User creator = userRepository.findUserById(idUser);
 
         if (!brandList.isEmpty()) {
             if (isRegistrationAlreadyExists(brandList, brandCreateRequestDTO.getName())) {
@@ -50,8 +51,9 @@ public class BrandService implements IBrandService{
             }
         }
 
-        brandRepository.insertBrand(brandCreateRequestDTO.getName(), idUser);
+        Brand brandCreated = brandRepository.save(BrandUtil.generateBrand(brandCreateRequestDTO.getName(), creator));
 
+        return BrandUtil.toBrandResponseDTO(brandCreated);
     }
 
     public BrandResponseDTO getBrandResponseDTO(Long idBrand) throws RegisterNotFoundException {

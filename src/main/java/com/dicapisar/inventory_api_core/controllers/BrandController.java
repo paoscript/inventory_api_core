@@ -44,7 +44,7 @@ public class BrandController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createNewBrand(@RequestBody @Valid BrandRequestDTO brandRequestDTO, HttpSession session)
+    public ResponseEntity<BrandResponseDTO> createNewBrand(@RequestBody @Valid BrandRequestDTO brandRequestDTO, HttpSession session)
             throws ExistingRegistrationException, ErrorUserWithoutPermissions {
         ArrayList<String> permissionList = new ArrayList<>();
         permissionList.add(ADMIN);
@@ -55,8 +55,9 @@ public class BrandController {
         if( !SessionUtil.isSessionWithPermissions(session, permissionList)) {
             throw new ErrorUserWithoutPermissions();
         }
-        brandService.createNewBrand(brandRequestDTO, SessionUtil.getUserId(session));
-        return new ResponseEntity<>(HttpStatus.CREATED);
+
+        return new ResponseEntity<>(brandService.createNewBrand(brandRequestDTO, SessionUtil.getUserId(session)),
+                HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
